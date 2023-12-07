@@ -1,5 +1,5 @@
 # Introduction
-Welcome to the API testing suite for the thetestingworldapi.com API. This repository contains a Postman collection and environment designed to facilitate API testing for various functionalities related to student management. The API allows operations such as fetching student details, creating new students, retrieving specific students, adding technical skills, and managing student addresses. 
+Welcome to the API testing suite for the thetestingworldapi.com API. This repository contains a Postman collection and environment designed to facilitate API testing for various functionalities related to booking. The API allows operations such as login, set booking, get booking, edit booking, delete. 
 
 # Summery    
 I have Completed an API test of login, set booking, get booking, edit booking, delete
