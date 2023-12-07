@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "d346c40c-bf54-4ef7-97bd-8a13f0fa82cc",
+		"name": "Practice_Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29357170"
+	},
+	"item": [
+		{
+			"name": "Token generation",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData=pm.response.json()",
+							"pm.environment.set(\"tokenID\",jsonData.token)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"username\": \"admin\",\n\"password\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/auth",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Set_Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var JsonData = pm.response.json()\r",
+							"pm.environment.set(\"bookingid\",JsonData.bookingid)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var firstname = pm. variables. replaceIn(\"{{$randomFirstName}}\")\r",
+							"pm.environment.set(\"firstname\", firstname)\r",
+							"\r",
+							"var lastname = pm. variables. replaceIn(\"{{$randomLastName}}\")\r",
+							"pm.environment.set(\"lastname\", lastname)\r",
+							"\r",
+							"var t = pm. variables. replaceIn(\"{{$randomPrice}}\")\r",
+							"var totalprice = parseInt(t, 10);\r",
+							"pm.environment.set(\"totalprice\", totalprice)\r",
+							"\r",
+							"var depositpaid = pm. variables. replaceIn(\"{{$randomBoolean}}\")\r",
+							"pm.environment.set(\"depositpaid\", depositpaid)\r",
+							"\r",
+							"// Get the random recent date as a string\r",
+							"var a = pm.variables.replaceIn(\"{{$randomDatePast}}\");\r",
+							"var randomDateRecent = new Date(a);\r",
+							"var checkin = randomDateRecent.toISOString().split('T')[0];\r",
+							"pm.environment.set(\"checkin\", checkin);\r",
+							"\r",
+							"\r",
+							"// Get the random recent date as a string\r",
+							"var b = pm.variables.replaceIn(\"{{$randomDateFuture}}\");\r",
+							"var randomDate = new Date(a);\r",
+							"var checkout = randomDate.toISOString().split('T')[0];\r",
+							"pm.environment.set(\"checkout\", checkout);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"firstname\" : \"{{firstname}}\",\n\"lastname\" : \"{{lastname}}\",\n\"totalprice\" : {{totalprice}},\n\"depositpaid\" : {{depositpaid}},\n\"bookingdates\" : {\n\n\"checkin\" : \"{{checkin}}\",\n\"checkout\" : \"{{checkout}}\"\n},\n\"additionalneeds\" : \"Breakfast\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/booking",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statuscode = pm.response.code\r",
+							"if(statuscode==200)\r",
+							"{\r",
+							"        pm.test(\"Status code is 200\", function () {\r",
+							"            pm.response.to.have.status(200);\r",
+							"        });\r",
+							"\r",
+							"        var jsonData = pm.response.json()\r",
+							"        pm.test(\"First Name Validation\", function(){\r",
+							"            pm.expect(jsonData.firstname).to.eql(pm.environment.get(\"firstname\"))\r",
+							"        })  \r",
+							"        pm.test(\"Last Name Validation\", function(){\r",
+							"            pm.expect(jsonData.lastname).to.eql(pm.environment.get(\"lastname\"))\r",
+							"        })\r",
+							"        pm.test(\"Total Price Validation\", function(){\r",
+							"            pm.expect(jsonData.totalprice).to.eql(pm.environment.get(\"totalprice\"))\r",
+							"        })\r",
+							"        pm.test(\"Deposit paid Validation\", function(){\r",
+							"            pm.expect(String(jsonData.depositpaid)).to.eql(pm.environment.get(\"depositpaid\"))\r",
+							"        })\r",
+							"        pm.test(\"Checkin Validation\", function(){\r",
+							"            pm.expect(jsonData.bookingdates.checkin).to.eql(pm.environment.get(\"checkin\"))\r",
+							"        })\r",
+							"        pm.test(\"Checkout Validation\", function(){\r",
+							"            pm.expect(jsonData.bookingdates.checkout).to.eql(pm.environment.get(\"checkout\"))\r",
+							"        })\r",
+							"}\r",
+							"\r",
+							"else if(statuscode==404)\r",
+							"{\r",
+							"    pm.test(\"Not Found\", function () {\r",
+							"            pm.response.to.have.status(404);\r",
+							"        });\r",
+							"}\r",
+							"\r",
+							"else if(statuscode==403)\r",
+							"{\r",
+							"    pm.test(\"Forbidden\", function () {\r",
+							"            pm.response.to.have.status(403);\r",
+							"        });\r",
+							"}\r",
+							"\r",
+							"else\r",
+							"{\r",
+							"    pm.test(\"Something Wrong\");\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/booking/{{bookingid}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{bookingid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "edit_booking",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{tokenID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"firstname\" : \"@\",\n\"lastname\" : \"Brown\",\n\"totalprice\" : 111,\n\"depositpaid\" : true,\n\"bookingdates\" : {\n\"checkin\" : \"2018-01-01\",\n\"checkout\" : \"2019-01-01\"\n},\n\"additionalneeds\" : \"Breakfast\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/booking/{{bookingid}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{bookingid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statuscode = pm.response.code\r",
+							"if(statuscode==201)\r",
+							"{\r",
+							"     pm.test(\"User Deleted\", function () {\r",
+							"            pm.response.to.have.status(201);\r",
+							"        });   \r",
+							"}\r",
+							"\r",
+							"else if(statuscode==404)\r",
+							"{\r",
+							"    pm.test(\"Not Found\", function () {\r",
+							"            pm.response.to.have.status(404);\r",
+							"        });\r",
+							"}\r",
+							"\r",
+							"else if(statuscode==403)\r",
+							"{\r",
+							"    pm.test(\"Forbidden: Expired Token\", function () {\r",
+							"            pm.response.to.have.status(403);\r",
+							"        });\r",
+							"}\r",
+							"\r",
+							"else\r",
+							"{\r",
+							"    pm.test(\"Something Wrong\");\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{tokenID}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/booking/{{bookingid}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"booking",
+						"{{bookingid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
