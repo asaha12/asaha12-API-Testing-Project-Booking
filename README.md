@@ -1,5 +1,5 @@
 # Introduction
-Welcome to the API testing suite for the thetestingworldapi.com API. This repository contains a Postman collection and environment designed to facilitate API testing for various functionalities related to booking. The API allows operations such as login, set booking, get booking, edit booking, delete. 
+Welcome to the API testing suite for the restful-booker.herokuapp.com API. This repository contains a Postman collection and environment designed to facilitate API testing for various functionalities related to booking. The API allows operations such as login, set booking, get booking, edit booking, delete. 
 
 # Summery    
 I have Completed an API test of login, set booking, get booking, edit booking, delete
